@@ -10,13 +10,12 @@ if(typeof define == 'function' && define.amd){
 }else{
     window.jQuery.overlay = factory(window.jQuery, window.jQuery.klass);
 }
-})(function($, Class){
-var doc = document;
-
-return Class.extend('Event', {
+})(function($, Class, Util){
+var int = parseInt;
+var Overlay = Class.extend('Event', {
     initialize: function(options){
         this.options = $.extend({
-            container: doc.body,
+            container: document.body,
             autoOpen: true,
             content: '',
             width: '100%',
@@ -32,10 +31,13 @@ return Class.extend('Event', {
 
     init: function(){
         var self = this;
-        var $container = self.container = $(self.options.container);
+        var container = self.options.container;
 
-        if($container[0] != doc.body){
-            !/fixed|absolute/.test($container.css('position')) && $container.css('position', 'relative');
+        if(Overlay.isDocumentOrBody(container)){
+            self.container = $(document.body);
+        }else{
+            self.container = $(container);
+            !/fixed|absolute/.test(self.container.css('position')) && self.container.css('position', 'relative');
         }
 
         self.create();
@@ -46,7 +48,8 @@ return Class.extend('Event', {
     create: function(){
         var self = this, options = self.options;
 
-        self.dom = $('<div class="ui3-overlay">').addClass(options.className).hide().append(options.content).appendTo(options.container);
+        self.dom = $('<div class="ui3-overlay">').addClass(options.className).hide().html(options.content);
+        self.container.append(self.dom);
         self.setSize(options.width, options.height);
         self.setPos(options.left, options.top);
     },
@@ -81,18 +84,19 @@ return Class.extend('Event', {
         var self = this;
 
         if(self.isPosCenter()){
-            var container = self.container.get(0), position;
+            var container, position;
 
-            if(container === doc.body){
+            if(Overlay.isDocumentOrBody(self.container)){
                 position = 'fixed';
                 container = window;
             }else{
+                container = document;
                 position = 'absolute';
             }
 
             self.css({
-                left: parseInt(($(container).outerWidth() - self.dom.outerWidth())/2),
-                top: parseInt(($(container).outerHeight() - self.dom.outerHeight())/2),
+                left: (parseInt($(container).outerWidth()) - parseInt(self.dom.outerWidth())) / 2,
+                top: (parseInt($(container).outerHeight()) - parseInt(self.dom.outerHeight())) / 2,
                 position: position
             });
         }
@@ -121,4 +125,12 @@ return Class.extend('Event', {
         self.ofs(window, 'resize');
     }
 });
+
+Overlay.isDocumentOrBody = function(dom){
+    dom = $(dom).get(0);
+    return dom === document.body || dom === document;
+};
+
+return Overlay;
+
 });
