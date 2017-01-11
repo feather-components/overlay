@@ -103,7 +103,7 @@ var Overlay = Class.extend('Event', {
     },
 
     isPosCenter: function(){
-        return this.options.center;
+        return !!this.options.center;
     },
 
     open: function(){
