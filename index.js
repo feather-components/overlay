@@ -40,24 +40,20 @@ var Overlay = Class.extend('Event', {
         }
 
         self.create();
-        self.initEvent();
         self.options.autoOpen && self.open();
     },
 
     create: function(){
         var self = this, options = self.options;
 
-        self.overlay = $('<div class="ui3-overlay">').addClass(options.className).html(options.content);
-        self.css('position', 'fixed');
+        self.$ = $('<div class="ui3-overlay">').addClass(options.className).html(options.content);
         self.setSize(options.width, options.height);
         self.setPos(options.left, options.top);
     },
 
     css: function(name, value){
-        return this.overlay.css(name, value);
+        return this.$.css(name, value);
     },
-
-    initEvent: function(){},
 
     setSize: function(width, height){
         var container = this.container;
@@ -79,6 +75,13 @@ var Overlay = Class.extend('Event', {
         }
     },
 
+    getSize: function(){
+        return {
+            width: this.$.outerWidth(),
+            height: this.$.outerHeight()
+        };
+    },
+
     setPos: function(x, y){
         var self = this;
 
@@ -87,20 +90,32 @@ var Overlay = Class.extend('Event', {
     },
 
     open: function(){
-        this.overlay.appendTo(this.container);
+        this.$.appendTo(this.container);
         this.trigger('open');
     },
 
     close: function(){
-        this.overlay.remove();
+        this.$.remove();
         this.trigger('close');
+    },
+
+    show: function(){
+        this.open();
+    },
+
+    hide: function(){
+        this.close();
+    },
+
+    toggle: function(){
+        this.$.is(':visible') ? this.hide() : this.show();
     },
 
     destroy: function(){
         var self = this;
 
-        self.overlay.remove();
-        self.overlay = null;
+        self.$.remove();
+        self.$ = null;
     }
 });
 
