@@ -20,8 +20,9 @@ var Overlay = Class.extend('Event', {
             content: '',
             width: false,
             height: false,
-            top: false,
-            left: false,
+            top: 0,
+            left: 0,
+            center: false,
             className: ''
         }, options || {});
 
@@ -41,6 +42,7 @@ var Overlay = Class.extend('Event', {
 
         self.create();
         self.options.autoOpen && self.open();
+        self.initEvent();
     },
 
     create: function(){
@@ -51,35 +53,43 @@ var Overlay = Class.extend('Event', {
         self.setPos(options.left, options.top);
     },
 
+    initEvent: function(){
+        var self = this;
+
+        self.o2s(window, 'resize', function(){
+            self.setPosCenter();
+        });
+    },
+
     css: function(name, value){
         return this.$.css(name, value);
     },
 
     setSize: function(width, height){
-        var container = this.container;
+        var self = this;
 
-        if(Overlay.isDocumentOrBody(container)){
-            container = $(document);
+        if(self.options.center){
+            return ;
         }
 
+        var container = self.container;
+        var size = Overlay.getSize(container);
+
         if(width === false){
-            this.css('width', container.outerWidth());
+            self.css('width', size.width);
         }else if(width != null){
-            this.css('width', width);
+            self.css('width', width);
         }
 
         if(height === false){
-            this.css('height', container.outerHeight());
+            self.css('height', size.height);
         }else if(height != null){
-            this.css('height', height);
+            self.css('height', height);
         }
     },
 
     getSize: function(){
-        return {
-            width: this.$.outerWidth(),
-            height: this.$.outerHeight()
-        };
+        return Overlay.getSize(this.$);
     },
 
     setPos: function(x, y){
@@ -89,8 +99,25 @@ var Overlay = Class.extend('Event', {
         y != null && self.css('top', y);
     },
 
+    setPosCenter: function(){
+        var self = this;
+
+        if(!self.options.center){
+            return;
+        }
+
+        var container = Overlay.isDocumentOrBody(container) ? window : self.container, position;
+        var size1 = Overlay.getSize(container), size2 = self.getSize();
+
+        self.css({
+            left: (size1.width - size2.width)/2,
+            top: (size1.height - size2.height)/2
+        });
+    },
+
     open: function(){
-        this.$.appendTo(this.container);
+        this.container.append(this.$);
+        this.setPosCenter();
         this.trigger('open');
     },
 
@@ -114,6 +141,7 @@ var Overlay = Class.extend('Event', {
     destroy: function(){
         var self = this;
 
+        self.ofs(window, 'resize');
         self.$.remove();
         self.$ = null;
     }
@@ -123,6 +151,19 @@ Overlay.isDocumentOrBody = function(dom){
     dom = $(dom).get(0);
     return dom === document.body || dom === document;
 };
+
+Overlay.getSize = function(dom){
+    if(Overlay.isDocumentOrBody(dom)){
+        dom = document;
+    }
+
+    dom = $(dom);
+
+    return {
+        width: parseInt(dom.outerWidth()),
+        height: parseInt(dom.outerHeight())
+    };
+}
 
 return Overlay;
 

@@ -3,4 +3,5 @@
     padding: 0px;
     margin: 0px;
     font: 12px Tahoma,Helvetica Neue,Hiragino Sans GB,Microsoft Yahei,sans-serif;
+    z-index: 10000;
 }
