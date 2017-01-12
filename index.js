@@ -66,26 +66,8 @@ var Overlay = Class.extend('Event', {
     },
 
     setSize: function(width, height){
-        var self = this;
-
-        if(self.options.center){
-            return ;
-        }
-
-        var container = self.container;
-        var size = Overlay.getSize(container);
-
-        if(width === false){
-            self.css('width', size.width);
-        }else if(width != null){
-            self.css('width', width);
-        }
-
-        if(height === false){
-            self.css('height', size.height);
-        }else if(height != null){
-            self.css('height', height);
-        }
+        width != null && this.css('width', width);
+        height != null && this.css('height', height);
     },
 
     getSize: function(){
