@@ -20,8 +20,8 @@ var Overlay = Class.extend('Event', {
             content: '',
             width: false,
             height: false,
-            top: 0,
-            left: 0,
+            top: false,
+            left: false,
             className: ''
         }, options || {});
 
