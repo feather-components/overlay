@@ -47,14 +47,14 @@ var Overlay = Class.extend('Event', {
     create: function(){
         var self = this, options = self.options;
 
-        self.dom = $('<div class="ui3-overlay">').addClass(options.className).html(options.content);
+        self.overlay = $('<div class="ui3-overlay">').addClass(options.className).html(options.content);
         self.css('position', 'fixed');
         self.setSize(options.width, options.height);
         self.setPos(options.left, options.top);
     },
 
     css: function(name, value){
-        return this.dom.css(name, value);
+        return this.overlay.css(name, value);
     },
 
     initEvent: function(){},
@@ -87,20 +87,20 @@ var Overlay = Class.extend('Event', {
     },
 
     open: function(){
-        this.dom.appendTo(this.container);
+        this.overlay.appendTo(this.container);
         this.trigger('open');
     },
 
     close: function(){
-        this.dom.remove();
+        this.overlay.remove();
         this.trigger('close');
     },
 
     destroy: function(){
         var self = this;
 
-        self.dom.remove();
-        self.dom = null;
+        self.overlay.remove();
+        self.overlay = null;
     }
 });
 
