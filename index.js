@@ -95,6 +95,10 @@ var Overlay = Class.extend('Event', {
     setPos: function(x, y){
         var self = this;
 
+        if(self.options.center){
+            return;
+        }
+
         x != null && self.css('left', x);
         y != null && self.css('top', y);
     },
