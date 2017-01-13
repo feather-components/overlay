@@ -11,7 +11,6 @@ if(typeof define == 'function' && define.amd){
     window.jQuery.overlay = factory(window.jQuery, window.jQuery.klass);
 }
 })(function($, Class, Util){
-var int = parseInt;
 var Overlay = Class.extend('Event', {
     initialize: function(options){
         this.options = $.extend({
@@ -48,7 +47,7 @@ var Overlay = Class.extend('Event', {
     create: function(){
         var self = this, options = self.options;
 
-        self.$ = $('<div class="ui3-overlay">').addClass(options.className).html(options.content);
+        self.$ = $('<div class="ui3-overlay">').addClass(options.className).append(options.content);
         self.setSize(options.width, options.height);
         self.setPos(options.left, options.top);
     },
@@ -128,6 +127,8 @@ var Overlay = Class.extend('Event', {
         var self = this;
 
         self.ofs(window, 'resize');
+        typeof self.options.content != 'string' && self.container.append(self.options.content);
+        self.container = null;
         self.$.remove();
         self.$ = null;
     }
