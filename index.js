@@ -47,9 +47,10 @@ var Overlay = Class.extend('Event', {
     create: function(){
         var self = this, options = self.options;
 
-        self.$ = $('<div class="ui3-overlay">').addClass(options.className).append(options.content);
+        self.$ = $('<div class="ui3-overlay">').addClass(options.className);
         self.setSize(options.width, options.height);
         self.setPos(options.left, options.top);
+        self.setContent(options.content);
     },
 
     initEvent: function(){
@@ -100,6 +101,15 @@ var Overlay = Class.extend('Event', {
         });
     },
 
+    setContent: function(content){
+        var self = this;
+
+        self.releaseDom();
+        self.$.empty();
+        self.$.append(self.content = content);
+        self.setPosCenter();
+    },
+
     open: function(){
         this.container.append(this.$);
         this.setPosCenter();
@@ -123,11 +133,18 @@ var Overlay = Class.extend('Event', {
         this.$.is(':visible') ? this.hide() : this.show();
     },
 
+    releaseDom: function(){
+        var self = this;
+
+        self.content && typeof self.content != 'string' && self.container.append(self.content);
+        self.content = null;
+    },
+
     destroy: function(){
         var self = this;
 
         self.ofs(window, 'resize');
-        typeof self.options.content != 'string' && self.container.append(self.options.content);
+        self.releaseDom();
         self.container = null;
         self.$.remove();
         self.$ = null;

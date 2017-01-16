@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>util test</title>
+    <title>overlay test</title>
     <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.11.0.css" />
     <script src="http://code.jquery.com/qunit/qunit-1.11.0.js"></script>
     <script src="../bower_components/jquery/dist/jquery.js"></script>
@@ -19,6 +19,13 @@ var layer = new $.overlay({
 });
 
 layer.css('background', 'red');
+setTimeout(function(){
+    layer.setContent($('#qunit'));
+
+    setTimeout(function(){
+        layer.setContent('1233');
+    }, 3000);
+}, 3000);
 </script>
 </body>
 </html>
