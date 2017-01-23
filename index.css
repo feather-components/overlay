@@ -4,4 +4,13 @@
     margin: 0px;
     font: 12px Tahoma,Helvetica Neue,Hiragino Sans GB,Microsoft Yahei,sans-serif;
     z-index: 10000;
+    overflow: auto;
+}
+
+.ui3-overlay::-webkit-scrollbar{
+    width: 11px;
+}
+
+.ui3-overlay::-webkit-scrollbar-thumb{
+    background: #ccc;
 }
