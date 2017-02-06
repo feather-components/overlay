@@ -117,7 +117,7 @@ var Overlay = Class.extend('Event', {
     },
 
     close: function(){
-        this.$.remove();
+        this.$.detach();
         this.trigger('close');
     },
 
