@@ -8,7 +8,7 @@ if(typeof define == 'function' && define.amd){
         require('class')
     );
 }else{
-    window.jQuery.overlay = factory(window.jQuery, window.jQuery.klass);
+    factory(window.jQuery, window.jQuery.klass);
 }
 })(function($, Class, Util){
 var Overlay = Class.extend('Event', {
@@ -169,6 +169,6 @@ Overlay.getSize = function(dom){
     };
 }
 
-return Overlay;
+return $.overlay = Overlay;
 
 });
