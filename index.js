@@ -104,31 +104,19 @@ var Overlay = Class.extend('Event', {
     setContent: function(content){
         var self = this;
 
-        self.releaseDom();
-        self.$.empty();
-
-        self.content = content;
-
-        if(typeof content != 'string'){
-            self.content = $(content);
-            self.content.$parent = self.content.parent();
-        }
-
-        self.$.append(self.content);
+        self.$.append(content);
         self.setPosCenter();
     },
 
     open: function(){
         var self = this;
 
-        self.content.$parent && self.$.append(self.content.show());
         self.container.append(self.$);
         self.trigger('open');
     },
 
     close: function(){
         this.$.detach();
-        this.releaseDom(true);
         this.trigger('close');
     },
 
@@ -144,22 +132,11 @@ var Overlay = Class.extend('Event', {
         this.$.is(':visible') ? this.hide() : this.show();
     },
 
-    releaseDom: function(hide){
-        var $content = this.content;
-
-        if($content && $content.$parent){
-            hide && $content.hide();
-            $content.$parent.append($content);
-        }
-    },
-
     destroy: function(){
         var self = this;
 
         self.ofs(window, 'resize');
-        self.releaseDom();
         self.container = null;
-        self.content = null;
         self.$.remove();
         self.$ = null;
     }
