@@ -10,7 +10,7 @@ if(typeof define == 'function' && define.amd){
 }else{
     factory(window.jQuery, window.jQuery.klass);
 }
-})(function($, Class, Util){
+})(function($, Class){
 var Overlay = Class.extend('Event', {
     initialize: function(options){
         this.options = $.extend({
@@ -106,18 +106,29 @@ var Overlay = Class.extend('Event', {
 
         self.releaseDom();
         self.$.empty();
-        self.$.append(self.content = content);
+
+        self.content = content;
+
+        if(typeof content != 'string'){
+            self.content = $(content);
+            self.content.$parent = self.content.parent();
+        }
+
+        self.$.append(self.content);
         self.setPosCenter();
     },
 
     open: function(){
-        this.container.append(this.$);
-        this.setPosCenter();
-        this.trigger('open');
+        var self = this;
+
+        self.content.$parent && self.$.append(self.content.show());
+        self.container.append(self.$);
+        self.trigger('open');
     },
 
     close: function(){
         this.$.detach();
+        this.releaseDom(true);
         this.trigger('close');
     },
 
@@ -133,11 +144,13 @@ var Overlay = Class.extend('Event', {
         this.$.is(':visible') ? this.hide() : this.show();
     },
 
-    releaseDom: function(){
-        var self = this;
+    releaseDom: function(hide){
+        var $content = this.content;
 
-        self.content && typeof self.content != 'string' && self.container.append(self.content);
-        self.content = null;
+        if($content && $content.$parent){
+            hide && $content.hide();
+            $content.$parent.append($content);
+        }
     },
 
     destroy: function(){
@@ -146,6 +159,7 @@ var Overlay = Class.extend('Event', {
         self.ofs(window, 'resize');
         self.releaseDom();
         self.container = null;
+        self.content = null;
         self.$.remove();
         self.$ = null;
     }

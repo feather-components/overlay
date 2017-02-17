@@ -12,7 +12,7 @@
 </head>
 
 <body>
-<div id="qunit"></div>
+<div id="test"><div id="qunit"></div></div>
 <script>
 var layer = new $.overlay({
     height: 300
@@ -23,7 +23,10 @@ setTimeout(function(){
     layer.setContent($('#qunit'));
 
     setTimeout(function(){
-        layer.setContent('1233');
+        layer.close();
+        setTimeout(function(){
+            layer.open();
+        }, 3000);
     }, 3000);
 }, 3000);
 </script>
