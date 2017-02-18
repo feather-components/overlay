@@ -47,7 +47,7 @@ var Overlay = Class.extend('Event', {
     create: function(){
         var self = this, options = self.options;
 
-        self.$ = $('<div class="ui3-overlay">').addClass(options.className);
+        self.$ = $('<div class="ui3-overlay">').addClass(options.className).appendTo(self.container);
         self.setSize(options.width, options.height);
         self.setPos(options.left, options.top);
         self.setContent(options.content);
@@ -111,12 +111,12 @@ var Overlay = Class.extend('Event', {
     open: function(){
         var self = this;
 
-        self.container.append(self.$);
+        self.$.show();
         self.trigger('open');
     },
 
     close: function(){
-        this.$.detach();
+        this.$.hide();
         this.trigger('close');
     },
 
